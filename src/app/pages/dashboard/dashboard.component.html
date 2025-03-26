@@ -1,0 +1,11 @@
+<div id="chart">
+  <apx-chart
+    #chart
+    [series]="chartOptions.series ?? []"
+    [chart]="chartOptions.chart ?? { type: 'line' }"
+    [xaxis]="chartOptions.xaxis ?? {}"
+    [stroke]="chartOptions.stroke ?? {}"
+    [tooltip]="chartOptions.tooltip ?? {}"
+    [dataLabels]="chartOptions.dataLabels ?? {}"
+  ></apx-chart>
+</div>

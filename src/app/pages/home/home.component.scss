@@ -1,0 +1,121 @@
+.presentation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  // animation: fadeIn 2s ease-in-out;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: slideIn 1.5s ease-out;
+}
+
+.description {
+  font-size: 1.5rem;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.gauges-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(#4caf50 0% 0%, #e0e0e0 0% 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: gaugeAnimation 4s ease-in-out infinite;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gauge-fill {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.gauge-cover {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4caf50;
+  animation: pulse 2s infinite;
+}
+
+.gauge-label {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+}
+
+@keyframes gaugeAnimation {
+  0% {
+    background: conic-gradient(#4caf50 0% 60%, #e0e0e0 60% 100%);
+  }
+  50% {
+    background: conic-gradient(#4caf50 0% 85%, #e0e0e0 85% 100%);
+  }
+  100% {
+    background: conic-gradient(#4caf50 0% 60%, #e0e0e0 60% 100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
