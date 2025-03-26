@@ -1,11 +1,122 @@
-<div id="chart">
-  <apx-chart
-    #chart
-    [series]="chartOptions.series ?? []"
-    [chart]="chartOptions.chart ?? { type: 'line' }"
-    [xaxis]="chartOptions.xaxis ?? {}"
-    [stroke]="chartOptions.stroke ?? {}"
-    [tooltip]="chartOptions.tooltip ?? {}"
-    [dataLabels]="chartOptions.dataLabels ?? {}"
-  ></apx-chart>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col col-md-6">
+      <div class="card text-center d-flex align-items-center p-3">
+        <ngx-gauge
+          [value]="gaugeOptionsTemperature.value"
+          [label]="gaugeOptionsTemperature.label"
+          [append]="gaugeOptionsTemperature.appendText"
+          [max]="gaugeOptionsTemperature.max"
+          type="semi"
+          [size]=200
+          [thick]=15
+          cap="round"
+          foregroundColor="#4caf50"
+          backgroundColor="#e0e0e0"
+        ></ngx-gauge>
+        <h5 class="card-title">Status da Temperatura</h5>
+        <p class="fw-semibold" [class.text-success]="lastTemperature < 30" [class.text-danger]="lastTemperature >= 30">
+          {{ lastTemperature < 30 ? 'Normal' : 'Alerta' }}
+        </p>
+      </div>
+    </div>
+    <div class="col col-md-6">
+      <div class="card text-center d-flex align-items-center p-3">
+        <ngx-gauge
+          [value]="gaugeOptionsHumidity.value"
+          [label]="gaugeOptionsHumidity.label"
+          [append]="gaugeOptionsHumidity.appendText"
+          [max]="gaugeOptionsHumidity.max"
+          type="semi"
+          [size]=200
+          [thick]=15
+          cap="round"
+          foregroundColor="#2196f3"
+          backgroundColor="#e0e0e0"
+        ></ngx-gauge>
+        <h5 class="card-title">Status da Umidade</h5>
+        <p class="fw-semibold" [class.text-success]="lastHumidity > 40 && lastHumidity < 70" [class.text-danger]="lastHumidity <= 40 || lastHumidity >= 70">
+          {{ lastHumidity > 40 && lastHumidity < 70 ? 'Normal' : 'Alerta' }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col col-md-6">
+      <div class="card d-flex align-items-center p-3">
+        <div class="icon-container bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+          <i class="fas fa-thermometer-half fa-2x"></i>
+        </div>
+        <div class="ms-3">
+          <h5 class="card-title mb-0">Média de Temperatura</h5>
+          <p class="card-value fw-semibold">{{ averageTemperature }} ºC</p>
+        </div>
+      </div>
+    </div>
+    <div class="col col-md-6">
+      <div class="card d-flex align-items-center p-3">
+        <div class="icon-container bg-info text-white rounded-circle d-flex justify-content-center align-items-center">
+          <i class="fas fa-tint fa-2x"></i>
+        </div>
+        <div class="ms-3">
+          <h5 class="card-title mb-0">Média de Umidade</h5>
+          <p class="card-value fw-semibold">{{ averageHumidity }} %</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title text-center">Temperatura x Umidade</h5>
+        </div>
+        <div class="card-body">
+          <div id="chart">
+            <apx-chart
+              #chart
+              [series]="chartOptions.series ?? []"
+              [chart]="chartOptions.chart ?? { type: 'line' }"
+              [xaxis]="chartOptions.xaxis ?? {}"
+              [stroke]="chartOptions.stroke ?? {}"
+              [tooltip]="chartOptions.tooltip ?? {}"
+              [dataLabels]="chartOptions.dataLabels ?? {}"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title text-center">Dados dos Sensores</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-info table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Sensor</th>
+                <th scope="col">Temperatura</th>
+                <th scope="col">Umidade</th>
+                <th scope="col">Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (data of qualityData?.data; track $index) {
+                <tr>
+                  <th scope="row">{{ data.SensorID }}</th>
+                  <td>{{ data.Temperature }}</td>
+                  <td>{{ data.Humidity }}</td>
+                  <td>{{ data.Timestamp }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
