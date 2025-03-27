@@ -1,1 +1,84 @@
-<p>fale-conosco works!</p>
+<div class="container mt-4">
+  <div class="card">
+    <div class="contact-info text-center">
+      <h2 class="text-white mb-4">Fale Conosco</h2>
+      <p class="text-white">
+        <i class="fas fa-phone-alt me-2"></i> (11) 1234-5678
+      </p>
+      <p class="text-white">
+        <i class="fas fa-envelope me-2"></i> contato&#64;iotprojeto.com
+      </p>
+    </div>
+
+    <div class="contact-form mt-4">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="name" class="form-label text-white">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            formControlName="name"
+            placeholder="Digite seu nome"
+          />
+          <small *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="text-warning">
+            Nome é obrigatório e deve ter pelo menos 3 caracteres.
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label text-white">E-mail</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+            placeholder="Digite seu e-mail"
+          />
+          <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="text-warning">
+            Insira um e-mail válido.
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label text-white">Telefone</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phone"
+            formControlName="phone"
+            placeholder="Digite seu telefone"
+          />
+          <small *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched" class="text-warning">
+            Insira um telefone válido (10 ou 11 dígitos).
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="subject" class="form-label text-white">Assunto</label>
+          <input
+            type="text"
+            class="form-control"
+            id="subject"
+            formControlName="subject"
+            placeholder="Digite o assunto"
+          />
+          <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="text-warning">
+            Assunto é obrigatório.
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label text-white">Descrição</label>
+          <textarea
+            class="form-control"
+            id="description"
+            formControlName="description"
+            rows="4"
+            placeholder="Digite a descrição"
+          ></textarea>
+          <small *ngIf="contactForm.get('description')?.invalid && contactForm.get('description')?.touched" class="text-warning">
+            Descrição é obrigatória e deve ter pelo menos 10 caracteres.
+          </small>
+        </div>
+        <button type="submit" class="btn btn-light w-100">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>

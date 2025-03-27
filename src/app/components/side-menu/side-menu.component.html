@@ -1,4 +1,7 @@
 <div class="wrapper">
+  @if(isMobile) {
+  <app-mobile-menu></app-mobile-menu>
+  } @else {
   <nav class="sidebar" [class.active]="isSidebarOpen">
     <div class="sidebar-header">
       <h4>Menu</h4>
@@ -11,22 +14,25 @@
         <a class="nav-link" routerLink="/home" routerLinkActive="active"><i class="fas fa-home"></i> Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active"><i class="fa-solid fa-chart-line"></i>
+          Dashboard</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/about" routerLinkActive="active"><i class="fas fa-info-circle"></i> Sobre</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/call-us" routerLinkActive="active"><i class="fa-regular fa-envelope"></i> Fale Conosco</a>
+        <a class="nav-link" routerLink="/call-us" routerLinkActive="active"><i class="fa-regular fa-envelope"></i> Fale
+          Conosco</a>
       </li>
     </ul>
   </nav>
+  }
 
   <div class="content">
-    @if(!isSidebarOpen) {
-      <button class="btn-open-menu" (click)="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-      </button>
+    @if(!isSidebarOpen && !isMobile) {
+    <button class="btn-open-menu" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
     }
     <div id="render-container" class="fade-in">
       <ng-content />

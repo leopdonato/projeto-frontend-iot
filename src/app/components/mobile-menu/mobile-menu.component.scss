@@ -1,0 +1,30 @@
+.mobile-menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #1e3a8a;
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  .menu-icon {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+
+    &:hover {
+      color: #4caf50;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: #ffffff;
+    }
+  }
+
+  i {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+  }
+}
