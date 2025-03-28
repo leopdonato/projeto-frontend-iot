@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MobileMenuComponent } from '../mobile-menu/mobile-menu.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -13,6 +13,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 export class SideMenuComponent {
   isMobile: boolean = false;
   isSidebarOpen = true;
+  @Output() logoutEvent = new EventEmitter<void>();
 
   constructor(private router: Router,
     private breakpointObserver: BreakpointObserver
@@ -38,5 +39,9 @@ export class SideMenuComponent {
       void renderContainer.offsetWidth;
       renderContainer.classList.add('fade-in');
     }
+  }
+
+  logout() {
+    this.logoutEvent.emit();
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -9,5 +9,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './mobile-menu.component.scss'
 })
 export class MobileMenuComponent {
+  @Output() logoutEvent = new EventEmitter<void>();
+
+  logout() {
+    this.logoutEvent.emit();
+  }
 
 }

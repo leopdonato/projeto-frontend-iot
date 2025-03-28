@@ -1,13 +1,18 @@
 <div class="wrapper">
   @if(isMobile) {
-  <app-mobile-menu></app-mobile-menu>
+  <app-mobile-menu (logoutEvent)="logout()"></app-mobile-menu>
   } @else {
   <nav class="sidebar" [class.active]="isSidebarOpen">
     <div class="sidebar-header">
-      <h4>Menu</h4>
-      <button class="btn-close-menu" (click)="toggleSidebar()">
-        <i class="fas fa-times"></i>
-      </button>
+      <img src="assets/images/logo.png" alt="logo" class="logo" width="100" />
+      <div class="d-flex flex-column">
+        <button class="btn-close-menu mb-4" (click)="toggleSidebar()">
+          <i class="fas fa-times"></i>
+        </button>
+        <button class="btn btn-light btn-logout" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </div>
     </div>
     <ul class="nav flex-column">
       <li class="nav-item">
