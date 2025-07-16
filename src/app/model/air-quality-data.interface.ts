@@ -1,11 +1,8 @@
-export interface AirQualityData {
-  count: number;
-  data: AirQuality[];
-}
-
 export interface AirQuality {
-  SensorID: string;
-  Temperature: number;
-  Humidity: number;
-  Timestamp: string;
+  deviceId: string;
+  temperature: number;
+  humidity: number;
+  gases: number;
+  co: number;
+  timestamp: number;
 }

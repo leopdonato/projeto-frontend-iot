@@ -22,9 +22,31 @@
       </div>
     </div>
   </div>
-
   <div class="row mt-4">
     <div class="col-12 col-md-6">
+      <div class="card text-center d-flex align-items-center p-3">
+        <ngx-gauge [value]="gaugeOptionsCO.value" [label]="gaugeOptionsCO.label"
+          [append]="gaugeOptionsCO.appendText" [max]="gaugeOptionsCO.max" type="semi" [size]=200
+          [thick]=15 cap="round" foregroundColor="#a5bfc4" backgroundColor="#e0e0e0"></ngx-gauge>
+        <h5 class="card-title">Status de Monóxido de Carbono</h5>
+        <p class="fw-semibold" [class.text-success]="lastCO < 300" [class.text-danger]="lastCO >= 300">
+          {{ lastCO < 300 ? 'Normal' : 'Alerta' }} </p>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 second-card">
+      <div class="card text-center d-flex align-items-center p-3">
+        <ngx-gauge [value]="gaugeOptionsGases.value" [label]="gaugeOptionsGases.label"
+          [append]="gaugeOptionsGases.appendText" [max]="gaugeOptionsGases.max" type="semi" [size]=200 [thick]=15
+          cap="round" foregroundColor="#fc8c03" backgroundColor="#e0e0e0"></ngx-gauge>
+        <h5 class="card-title">Status de Gases Inflamáveis</h5>
+        <p class="fw-semibold" [class.text-success]="lastGases < 100" [class.text-danger]="lastGases >= 100">
+          {{ lastGases < 100 ? 'Normal' : 'Alerta' }} </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12 col-md-3">
       <div class="card d-flex align-items-center p-3">
         <div
           class="icon-container bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
@@ -34,9 +56,9 @@
           <h5 class="card-title mb-0">Média de Temperatura</h5>
           <p class="card-value fw-semibold">{{ averageTemperature }} ºC</p>
         </div>
-      </div>
+       </div>
     </div>
-    <div class="col-12 col-md-6 second-card">
+    <div class="col-12 col-md-3 second-card">
       <div class="card d-flex align-items-center p-3">
         <div class="icon-container bg-info text-white rounded-circle d-flex justify-content-center align-items-center">
           <i class="fas fa-tint fa-2x"></i>
@@ -47,13 +69,35 @@
         </div>
       </div>
     </div>
+    <div class="col-12 col-md-3 second-card">
+      <div class="card d-flex align-items-center p-3">
+        <div class="icon-container bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
+          <i class="fas fa-smog fa-2x"></i>
+        </div>
+        <div class="ms-3">
+          <h5 class="card-title mb-0">Média de Monóxido de Carbono</h5>
+          <p class="card-value fw-semibold">{{ averageCO }} ppm</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3 second-card">
+      <div class="card d-flex align-items-center p-3">
+        <div class="icon-container bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
+          <i class="fas fa-mask-face fa-2x"></i>
+        </div>
+        <div class="ms-3">
+          <h5 class="card-title mb-0">Média de Gases Inflamáveis</h5>
+          <p class="card-value fw-semibold">{{ averageGases }} ppm</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row mt-4">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title text-center">Temperatura x Umidade</h5>
+          <h5 class="card-title text-center">Temperatura x Umidade x CO x Gases</h5>
         </div>
         <div class="card-body">
           <div id="chart">
@@ -81,29 +125,35 @@
                   <th scope="col">Sensor</th>
                   <th scope="col">Temperatura</th>
                   <th scope="col">Umidade</th>
+                  <th scope="col">Monóxido de Carbono</th>
+                  <th scope="col">Gases Inflamáveis</th>
                   <th scope="col">Data</th>
                 </tr>
               </thead>
               <tbody>
-                @for (data of qualityData?.data; track $index) {
+                @for (data of qualityData; track $index) {
                 <tr>
-                  <th scope="row">{{ data.SensorID }}</th>
-                  <td>{{ data.Temperature }}</td>
-                  <td>{{ data.Humidity }}</td>
-                  <td>{{ data.Timestamp }}</td>
+                  <th scope="row">{{ data.deviceId }}</th>
+                  <td>{{ data.temperature }}</td>
+                  <td>{{ data.humidity }}</td>
+                  <td>{{ data.co }}</td>
+                  <td>{{ data.gases }}</td>
+                  <td>{{ data.timestamp }}</td>
                 </tr>
                 }
               </tbody>
             </table>
           </div>
           <div class="d-block d-md-none">
-            @for (data of qualityData?.data; track $index) {
+            @for (data of qualityData; track $index) {
               <div class="card mb-3">
                 <div class="card-body">
-                  <h5 class="card-title">Sensor: {{ data.SensorID }}</h5>
-                  <p class="card-text">Temperatura: {{ data.Temperature }} ºC</p>
-                  <p class="card-text">Umidade: {{ data.Humidity }} %</p>
-                  <p class="card-text">Data: {{ data.Timestamp }}</p>
+                  <h5 class="card-title">Sensor: {{ data.deviceId }}</h5>
+                  <p class="card-text">Temperatura: {{ data.temperature }} ºC</p>
+                  <p class="card-text">Umidade: {{ data.humidity }} %</p>
+                  <p class="card-text">Monóxido de Carbono: {{ data.co }} ppm</p>
+                  <p class="card-text">Gases Inflamáveis: {{ data.gases }} ppm</p>
+                  <p class="card-text">Data: {{ data.timestamp }}</p>
                 </div>
               </div>
             }

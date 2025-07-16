@@ -9,7 +9,7 @@ import { ChartComponent,
   ApexStroke,
   ChartType,
   NgApexchartsModule} from 'ng-apexcharts';
-import { AirQualityData } from '../../model/air-quality-data.interface';
+import { AirQuality } from '../../model/air-quality-data.interface';
 import { NgxGaugeModule } from 'ngx-gauge';
 
 export type ChartOptions = {
@@ -30,14 +30,18 @@ export type ChartOptions = {
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private intervalId: any;
-  qualityData!: AirQualityData;
+  qualityData!: AirQuality[];
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   averageTemperature: number = 0;
   averageHumidity: number = 0;
+  averageCO: number = 0;
+  averageGases: number = 0;
 
   lastTemperature: number = 0;
   lastHumidity: number = 0;
+  lastCO: number = 0;
+  lastGases: number = 0;
 
   gaugeOptionsTemperature = {
     value: 0,
@@ -53,6 +57,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     max: 100
   };
 
+  gaugeOptionsCO = {
+    value: 0,
+    label: 'Monóxido de Carbono (CO)',
+    appendText: 'ppm',
+    max: 100
+  };
+
+  gaugeOptionsGases = {
+    value: 0,
+    label: 'Gases Inflamáveis',
+    appendText: 'ppm',
+    max: 100
+  };
+
   constructor(private readonly nodeRedService: NodeRedService) {
     this.chartOptions = {
       series: [
@@ -62,6 +80,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
         {
           name: "Umidade",
+          data: []
+        },
+        {
+          name: "Monóxido de Carbono (CO)",
+          data: []
+        },
+        {
+          name: "Gases Inflamáveis",
           data: []
         }
       ],
@@ -106,19 +132,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.qualityData = data;
 
-        if (this.chart && this.qualityData.data) {
-          const temperatures = this.qualityData.data.map((item) => item.Temperature);
-          const humidities = this.qualityData.data.map((item) => item.Humidity);
+        if (this.chart && this.qualityData) {
+          const temperatures = this.qualityData.map((item) => item.temperature);
+          const humidities = this.qualityData.map((item) => item.humidity);
+          const co = this.qualityData.map((item) => item.co);
+          const gases = this.qualityData.map((item) => item.gases);
 
           this.averageTemperature = this.calculateAverage(temperatures);
           this.averageHumidity = this.calculateAverage(humidities);
+          this.averageCO = this.calculateAverage(co);
+          this.averageGases = this.calculateAverage(gases);
 
-          const lastData = data.data[data.data.length - 1];
-          this.lastTemperature = lastData.Temperature;
-          this.lastHumidity = lastData.Humidity;
+          const lastData = data[data.length - 1];
+          this.lastTemperature = lastData.temperature;
+          this.lastHumidity = lastData.humidity;
+          this.lastCO = lastData.co;
+          this.lastGases = lastData.gases;
 
           this.gaugeOptionsTemperature.value = this.lastTemperature;
           this.gaugeOptionsHumidity.value = this.lastHumidity;
+          this.gaugeOptionsCO.value = this.lastCO;
+          this.gaugeOptionsGases.value = this.lastGases;
 
           this.chart.updateSeries([
             {
@@ -128,12 +162,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
             {
               name: "Umidade",
               data: humidities
-            }
+            },
+            {
+              name: "Monóxido de Carbono (CO)",
+              data: co
+            },
+            {
+              name: "Gases Inflamáveis",
+              data: gases
+            },
           ]);
 
           this.chart.updateOptions({
             xaxis: {
-              categories: this.qualityData.data.map((item) => item.Timestamp)
+              categories: this.qualityData.map((item) => item.timestamp)
             }
           });
         }
