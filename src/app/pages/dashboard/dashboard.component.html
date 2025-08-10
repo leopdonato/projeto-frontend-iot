@@ -29,8 +29,8 @@
           [append]="gaugeOptionsCO.appendText" [max]="gaugeOptionsCO.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#a5bfc4" backgroundColor="#e0e0e0"></ngx-gauge>
         <h5 class="card-title">Status de Monóxido de Carbono</h5>
-        <p class="fw-semibold" [class.text-success]="lastCO < 300" [class.text-danger]="lastCO >= 300">
-          {{ lastCO < 300 ? 'Normal' : 'Alerta' }} </p>
+        <p class="fw-semibold" [class.text-success]="lastCO < 200" [class.text-danger]="lastCO >= 200">
+          {{ lastCO < 200 ? 'Normal' : 'Alerta' }} </p>
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
@@ -138,7 +138,7 @@
                   <td>{{ data.humidity }}</td>
                   <td>{{ data.co }}</td>
                   <td>{{ data.gases }}</td>
-                  <td>{{ data.timestamp }}</td>
+                  <td>{{ data.timestamp | date: 'dd/MM/yyyy HH:mm' }}</td>
                 </tr>
                 }
               </tbody>
@@ -153,7 +153,7 @@
                   <p class="card-text">Umidade: {{ data.humidity }} %</p>
                   <p class="card-text">Monóxido de Carbono: {{ data.co }} ppm</p>
                   <p class="card-text">Gases Inflamáveis: {{ data.gases }} ppm</p>
-                  <p class="card-text">Data: {{ data.timestamp }}</p>
+                  <p class="card-text">Data: {{ data.timestamp | date: 'dd/MM/yyyy HH:mm' }}</p>
                 </div>
               </div>
             }

@@ -11,6 +11,7 @@ import { ChartComponent,
   NgApexchartsModule} from 'ng-apexcharts';
 import { AirQuality } from '../../model/air-quality-data.interface';
 import { NgxGaugeModule } from 'ngx-gauge';
+import { DatePipe } from '@angular/common';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -24,7 +25,7 @@ export type ChartOptions = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgApexchartsModule, NgxGaugeModule],
+  imports: [NgApexchartsModule, NgxGaugeModule, DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -61,7 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     value: 0,
     label: 'Monóxido de Carbono (CO)',
     appendText: 'ppm',
-    max: 100
+    max: 200
   };
 
   gaugeOptionsGases = {
@@ -118,7 +119,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.intervalId = setInterval(() => {
       this.getAllData();
-    }, 1200000);
+    }, 300000); // <-5 minutes / 1200000 <-20 minutes
   }
 
   ngOnDestroy(): void {
@@ -128,7 +129,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getAllData(): void {
-    this.nodeRedService.getAllData().subscribe({
+    this.nodeRedService.getAllData()
+    .subscribe({
       next: (data) => {
         this.qualityData = data;
 
@@ -143,11 +145,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.averageCO = this.calculateAverage(co);
           this.averageGases = this.calculateAverage(gases);
 
-          const lastData = data[data.length - 1];
+          const lastData = data[0];
           this.lastTemperature = lastData.temperature;
           this.lastHumidity = lastData.humidity;
-          this.lastCO = lastData.co;
-          this.lastGases = lastData.gases;
+          this.lastCO = Number(lastData.co.toFixed(2));
+          this.lastGases = Number(lastData.gases.toFixed(2));
 
           this.gaugeOptionsTemperature.value = this.lastTemperature;
           this.gaugeOptionsHumidity.value = this.lastHumidity;
