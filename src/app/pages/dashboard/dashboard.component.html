@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastTemperature >= 30 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsTemperature.value" [label]="gaugeOptionsTemperature.label"
           [append]="gaugeOptionsTemperature.appendText" [max]="gaugeOptionsTemperature.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#4caf50" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
-      <div class="card text-center d-flex align-items-center p-3">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastHumidity <= 40 || lastHumidity >= 70 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsHumidity.value" [label]="gaugeOptionsHumidity.label"
           [append]="gaugeOptionsHumidity.appendText" [max]="gaugeOptionsHumidity.max" type="semi" [size]=200 [thick]=15
           cap="round" foregroundColor="#2196f3" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -24,7 +24,7 @@
   </div>
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastCO >= 200 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsCO.value" [label]="gaugeOptionsCO.label"
           [append]="gaugeOptionsCO.appendText" [max]="gaugeOptionsCO.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#a5bfc4" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
-      <div class="card text-center d-flex align-items-center p-3">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastGases >= 100 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsGases.value" [label]="gaugeOptionsGases.label"
           [append]="gaugeOptionsGases.appendText" [max]="gaugeOptionsGases.max" type="semi" [size]=200 [thick]=15
           cap="round" foregroundColor="#fc8c03" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -131,7 +131,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for (data of qualityData; track $index) {
+                @for (data of paginatedQualityData; track $index) {
                 <tr>
                   <th scope="row">{{ data.deviceId }}</th>
                   <td>{{ data.temperature }}</td>
@@ -145,7 +145,7 @@
             </table>
           </div>
           <div class="d-block d-md-none">
-            @for (data of qualityData; track $index) {
+            @for (data of paginatedQualityData; track $index) {
               <div class="card mb-3">
                 <div class="card-body">
                   <h5 class="card-title">Sensor: {{ data.deviceId }}</h5>
@@ -159,6 +159,27 @@
             }
           </div>
         </div>
+        <div class="card-footer d-flex justify-content-center">
+        <nav aria-label="Navegação da página">
+          <ul class="pagination">
+
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link" href="javascript:void(0)" (click)="previousPage()">Anterior</a>
+            </li>
+
+            @for (page of [].constructor(totalPages); let i = $index; track i) {
+              <li class="page-item" [class.active]="currentPage === i + 1">
+                <a class="page-link" href="javascript:void(0)" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
+              </li>
+            }
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link" href="javascript:void(0)" (click)="nextPage()">Próximo</a>
+            </li>
+
+          </ul>
+        </nav>
+      </div>
       </div>
     </div>
   </div>

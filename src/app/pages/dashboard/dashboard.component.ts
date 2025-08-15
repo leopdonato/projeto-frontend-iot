@@ -32,8 +32,12 @@ export type ChartOptions = {
 export class DashboardComponent implements OnInit, OnDestroy {
   private intervalId: any;
   qualityData!: AirQuality[];
+  paginatedQualityData: AirQuality[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 30;
+  totalPages: number = 0;
   @ViewChild("chart") chart!: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  chartOptions: Partial<ChartOptions>;
   averageTemperature: number = 0;
   averageHumidity: number = 0;
   averageCO: number = 0;
@@ -104,7 +108,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       xaxis: {
         type: "datetime",
-        categories: []
+        categories: [],
+        labels: {
+          datetimeUTC: false, // Importante para usar o fuso horário local como referência
+          formatter: function(value, timestamp) {
+            // Se o timestamp não existir, retorne uma string vazia ou um placeholder
+            if (!timestamp) {
+              return 'Data indisponível';
+            }
+            // Formata a data e hora para o padrão de Brasília
+            return new Date(timestamp).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+          }
+        }
       },
       tooltip: {
         x: {
@@ -184,6 +199,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error(error);
+      },
+      complete: () => {
+        this.totalPages = Math.ceil(this.qualityData.length / this.itemsPerPage);
+        this.updatePaginatedData();
       }
     });
   }
@@ -192,6 +211,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (values.length === 0) return 0;
     const sum = values.reduce((a, b) => a + b, 0);
     return parseFloat((sum / values.length).toFixed(2));
+  }
+
+  /**
+   * Calcula a "fatia" de dados para a página atual e atualiza o array.
+   */
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedQualityData = this.qualityData.slice(startIndex, endIndex);
+  }
+
+  /**
+   * Vai para uma página específica.
+   * @param page O número da página de destino.
+   */
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  /**
+   * Vai para a página seguinte, se houver.
+   */
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  /**
+   * Vai para a página anterior, se houver.
+   */
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
   }
 
 }
