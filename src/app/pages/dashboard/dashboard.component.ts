@@ -12,6 +12,8 @@ import { ChartComponent,
 import { AirQuality } from '../../model/air-quality-data.interface';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { DatePipe } from '@angular/common';
+import { AutomationStatus } from '../../model/automation-status.enum';
+import { AutomationStatusPayload } from '../../model/automation-status-payload';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -47,6 +49,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   lastHumidity: number = 0;
   lastCO: number = 0;
   lastGases: number = 0;
+
+  automationStatusHumidity: AutomationStatus = AutomationStatus.DISABLED;
+
+  protected automationStatusEnum = AutomationStatus;
 
   gaugeOptionsTemperature = {
     value: 0,
@@ -146,8 +152,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getAllData(): void {
     this.nodeRedService.getAllData()
     .subscribe({
-      next: (data) => {
-        this.qualityData = data;
+      next: ({air_quality, automation_status_humidity}) => {
+        this.qualityData = air_quality;
+        this.automationStatusHumidity = automation_status_humidity;
 
         if (this.chart && this.qualityData) {
           const temperatures = this.qualityData.map((item) => item.temperature);
@@ -160,7 +167,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.averageCO = this.calculateAverage(co);
           this.averageGases = this.calculateAverage(gases);
 
-          const lastData = data[0];
+          const lastData = air_quality[0];
           this.lastTemperature = lastData.temperature;
           this.lastHumidity = lastData.humidity;
           this.lastCO = Number(lastData.co.toFixed(2));
@@ -251,6 +258,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.currentPage--;
       this.updatePaginatedData();
     }
+  }
+
+  toggleAutomationHumidity(event: any): void {
+    const payload: AutomationStatusPayload = {
+      status: event.target.checked ? AutomationStatus.ENABLED : AutomationStatus.DISABLED
+    }
+
+    this.nodeRedService.updateAutomationStatus(payload).subscribe({
+      next: () => {
+        this.automationStatusHumidity = payload.status;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
 }

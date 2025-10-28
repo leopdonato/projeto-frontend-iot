@@ -1,5 +1,21 @@
 <div class="container">
   <div class="row mt-4">
+    <div class="col-12">
+      <div class="form-check form-switch automation-switch-container w-100">
+        <input
+          class="form-check-input automation-switch"
+          type="checkbox"
+          role="switch"
+          id="flexSwitchAutomationHumidity"
+          [checked]="automationStatusHumidity === automationStatusEnum.ENABLED"
+          (change)="toggleAutomationHumidity($event)">
+        <label class="form-check-label automation-switch-label" for="flexSwitchAutomationHumidity">
+          {{automationStatusHumidity === automationStatusEnum.ENABLED ? 'Desabilitar' : 'Habilitar'}} automação de umidade
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
     <div class="col-12 col-md-6">
       <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastTemperature >= 30 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsTemperature.value" [label]="gaugeOptionsTemperature.label"
