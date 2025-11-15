@@ -72,14 +72,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     value: 0,
     label: 'Monóxido de Carbono (CO)',
     appendText: 'ppm',
-    max: 200
+    max: 400
   };
 
   gaugeOptionsGases = {
     value: 0,
     label: 'Gases Inflamáveis',
     appendText: 'ppm',
-    max: 100
+    max: 200
   };
 
   constructor(private readonly nodeRedService: NodeRedService) {

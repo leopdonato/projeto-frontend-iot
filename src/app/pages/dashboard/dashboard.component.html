@@ -17,7 +17,7 @@
   </div>
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastTemperature >= 30 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastTemperature >= 30 || lastTemperature <= 10 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsTemperature.value" [label]="gaugeOptionsTemperature.label"
           [append]="gaugeOptionsTemperature.appendText" [max]="gaugeOptionsTemperature.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#4caf50" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -40,7 +40,7 @@
   </div>
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastCO >= 200 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastCO >= 100 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsCO.value" [label]="gaugeOptionsCO.label"
           [append]="gaugeOptionsCO.appendText" [max]="gaugeOptionsCO.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#a5bfc4" backgroundColor="#e0e0e0"></ngx-gauge>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastGases >= 100 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastGases >= 50 ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsGases.value" [label]="gaugeOptionsGases.label"
           [append]="gaugeOptionsGases.appendText" [max]="gaugeOptionsGases.max" type="semi" [size]=200 [thick]=15
           cap="round" foregroundColor="#fc8c03" backgroundColor="#e0e0e0"></ngx-gauge>
