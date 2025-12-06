@@ -14,6 +14,7 @@ import { NgxGaugeModule } from 'ngx-gauge';
 import { DatePipe } from '@angular/common';
 import { AutomationStatus } from '../../model/automation-status.enum';
 import { AutomationStatusPayload } from '../../model/automation-status-payload';
+import { finalize } from 'rxjs';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -53,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   automationStatusHumidity: AutomationStatus = AutomationStatus.DISABLED;
 
   protected automationStatusEnum = AutomationStatus;
+  isLoading: boolean = false;
 
   gaugeOptionsTemperature = {
     value: 0,
@@ -149,8 +151,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  refreshData(): void {
+    this.getAllData();
+  }
+
   private getAllData(): void {
+    this.isLoading = true;
     this.nodeRedService.getAllData()
+    .pipe(finalize(() => this.isLoading = false))
     .subscribe({
       next: ({air_quality, automation_status_humidity}) => {
         this.qualityData = air_quality;
@@ -218,6 +226,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (values.length === 0) return 0;
     const sum = values.reduce((a, b) => a + b, 0);
     return parseFloat((sum / values.length).toFixed(2));
+  }
+
+  get isBadTemperature(): boolean {
+    return this.lastTemperature >= 30 || this.lastTemperature <= 10;
+  }
+
+  get isBadHumidity(): boolean {
+    return this.lastHumidity <= 40 || this.lastHumidity >= 70;
+  }
+
+  get isBadCO(): boolean {
+    return this.lastCO >= 100;
+  }
+
+  get isBadGases(): boolean {
+    return this.lastGases >= 50;
   }
 
   /**

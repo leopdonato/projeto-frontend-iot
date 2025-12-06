@@ -1,62 +1,76 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-12">
-      <div class="form-check form-switch automation-switch-container w-100">
-        <input
-          class="form-check-input automation-switch"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchAutomationHumidity"
-          [checked]="automationStatusHumidity === automationStatusEnum.ENABLED"
-          (change)="toggleAutomationHumidity($event)">
-        <label class="form-check-label automation-switch-label" for="flexSwitchAutomationHumidity">
-          {{automationStatusHumidity === automationStatusEnum.ENABLED ? 'Desabilitar' : 'Habilitar'}} automação de umidade
-        </label>
+  <div class="col-12">
+    <div class="header-options p-3">
+      <div class="row align-items-center g-2">
+        <div class="col-12 col-md-6">
+          <div class="form-check form-switch automation-switch-container w-100">
+            <input class="form-check-input automation-switch" type="checkbox" role="switch"
+              id="flexSwitchAutomationHumidity" [checked]="automationStatusHumidity === automationStatusEnum.ENABLED"
+              (change)="toggleAutomationHumidity($event)">
+            <label class="form-check-label automation-switch-label ms-3" for="flexSwitchAutomationHumidity">
+              {{automationStatusHumidity === automationStatusEnum.ENABLED ? 'Desabilitar' : 'Habilitar'}} automação de
+              umidade
+            </label>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end mt-2">
+          <button class="btn refresh-btn d-flex align-items-center"
+            type="button" (click)="refreshData()" aria-label="Atualizar painel">
+            <i class="fas fa-sync-alt me-2" aria-hidden="true"></i>
+            Atualizar dados
+          </button>
+        </div>
       </div>
     </div>
   </div>
+</div>
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastTemperature >= 30 || lastTemperature <= 10 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3"
+        [style]="{ backgroundColor: isBadTemperature ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsTemperature.value" [label]="gaugeOptionsTemperature.label"
           [append]="gaugeOptionsTemperature.appendText" [max]="gaugeOptionsTemperature.max" type="semi" [size]=200
           [thick]=15 cap="round" foregroundColor="#4caf50" backgroundColor="#e0e0e0"></ngx-gauge>
         <h5 class="card-title">Status da Temperatura</h5>
-        <p class="fw-semibold" [class.text-success]="lastTemperature < 30" [class.text-danger]="lastTemperature >= 30">
-          {{ lastTemperature < 30 ? 'Normal' : 'Alerta' }} </p>
+        <p class="fw-semibold" [class.text-success]="!isBadTemperature" [class.text-danger]="isBadTemperature">
+          {{ !isBadTemperature ? 'Normal' : 'Alerta' }} </p>
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastHumidity <= 40 || lastHumidity >= 70 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3"
+        [style]="{ backgroundColor: isBadHumidity ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsHumidity.value" [label]="gaugeOptionsHumidity.label"
           [append]="gaugeOptionsHumidity.appendText" [max]="gaugeOptionsHumidity.max" type="semi" [size]=200 [thick]=15
           cap="round" foregroundColor="#2196f3" backgroundColor="#e0e0e0"></ngx-gauge>
         <h5 class="card-title">Status da Umidade</h5>
-        <p class="fw-semibold" [class.text-success]="lastHumidity > 40 && lastHumidity < 70"
-          [class.text-danger]="lastHumidity <= 40 || lastHumidity >= 70">
-          {{ lastHumidity > 40 && lastHumidity < 70 ? 'Normal' : 'Alerta' }} </p>
+        <p class="fw-semibold" [class.text-success]="!isBadHumidity" [class.text-danger]="isBadHumidity">
+          {{ !isBadHumidity? 'Normal' : 'Alerta' }} </p>
       </div>
     </div>
   </div>
   <div class="row mt-4">
     <div class="col-12 col-md-6">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastCO >= 100 ? '#ffebee' : null }">
-        <ngx-gauge [value]="gaugeOptionsCO.value" [label]="gaugeOptionsCO.label"
-          [append]="gaugeOptionsCO.appendText" [max]="gaugeOptionsCO.max" type="semi" [size]=200
-          [thick]=15 cap="round" foregroundColor="#a5bfc4" backgroundColor="#e0e0e0"></ngx-gauge>
+      <div class="card text-center d-flex align-items-center p-3"
+        [style]="{ backgroundColor: isBadCO ? '#ffebee' : null }">
+        <ngx-gauge [value]="gaugeOptionsCO.value" [label]="gaugeOptionsCO.label" [append]="gaugeOptionsCO.appendText"
+          [max]="gaugeOptionsCO.max" type="semi" [size]=200 [thick]=15 cap="round" foregroundColor="#a5bfc4"
+          backgroundColor="#e0e0e0"></ngx-gauge>
         <h5 class="card-title">Status de Monóxido de Carbono</h5>
-        <p class="fw-semibold" [class.text-success]="lastCO < 200" [class.text-danger]="lastCO >= 200">
-          {{ lastCO < 200 ? 'Normal' : 'Alerta' }} </p>
+        <p class="fw-semibold" [class.text-success]="!isBadCO" [class.text-danger]="isBadCO">
+          {{ !isBadCO ? 'Normal' : 'Alerta' }} </p>
       </div>
     </div>
     <div class="col-12 col-md-6 second-card">
-      <div class="card text-center d-flex align-items-center p-3" [style]="{ backgroundColor: lastGases >= 50 ? '#ffebee' : null }">
+      <div class="card text-center d-flex align-items-center p-3"
+        [style]="{ backgroundColor: isBadGases ? '#ffebee' : null }">
         <ngx-gauge [value]="gaugeOptionsGases.value" [label]="gaugeOptionsGases.label"
           [append]="gaugeOptionsGases.appendText" [max]="gaugeOptionsGases.max" type="semi" [size]=200 [thick]=15
           cap="round" foregroundColor="#fc8c03" backgroundColor="#e0e0e0"></ngx-gauge>
         <h5 class="card-title">Status de Gases Inflamáveis</h5>
-        <p class="fw-semibold" [class.text-success]="lastGases < 100" [class.text-danger]="lastGases >= 100">
-          {{ lastGases < 100 ? 'Normal' : 'Alerta' }} </p>
+        <p class="fw-semibold" [class.text-success]="!isBadGases" [class.text-danger]="isBadGases">
+          {{ !isBadGases ? 'Normal' : 'Alerta' }} </p>
       </div>
     </div>
   </div>
@@ -72,7 +86,7 @@
           <h5 class="card-title mb-0">Média de Temperatura</h5>
           <p class="card-value fw-semibold">{{ averageTemperature }} ºC</p>
         </div>
-       </div>
+      </div>
     </div>
     <div class="col-12 col-md-3 second-card">
       <div class="card d-flex align-items-center p-3">
@@ -87,7 +101,8 @@
     </div>
     <div class="col-12 col-md-3 second-card">
       <div class="card d-flex align-items-center p-3">
-        <div class="icon-container bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
+        <div
+          class="icon-container bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
           <i class="fas fa-smog fa-2x"></i>
         </div>
         <div class="ms-3">
@@ -98,7 +113,8 @@
     </div>
     <div class="col-12 col-md-3 second-card">
       <div class="card d-flex align-items-center p-3">
-        <div class="icon-container bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
+        <div
+          class="icon-container bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
           <i class="fas fa-mask-face fa-2x"></i>
         </div>
         <div class="ms-3">
@@ -162,41 +178,48 @@
           </div>
           <div class="d-block d-md-none">
             @for (data of paginatedQualityData; track $index) {
-              <div class="card mb-3">
-                <div class="card-body">
-                  <h5 class="card-title">Sensor: {{ data.deviceId }}</h5>
-                  <p class="card-text">Temperatura: {{ data.temperature }} ºC</p>
-                  <p class="card-text">Umidade: {{ data.humidity }} %</p>
-                  <p class="card-text">Monóxido de Carbono: {{ data.co }} ppm</p>
-                  <p class="card-text">Gases Inflamáveis: {{ data.gases }} ppm</p>
-                  <p class="card-text">Data: {{ data.timestamp | date: 'dd/MM/yyyy HH:mm' }}</p>
-                </div>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Sensor: {{ data.deviceId }}</h5>
+                <p class="card-text">Temperatura: {{ data.temperature }} ºC</p>
+                <p class="card-text">Umidade: {{ data.humidity }} %</p>
+                <p class="card-text">Monóxido de Carbono: {{ data.co }} ppm</p>
+                <p class="card-text">Gases Inflamáveis: {{ data.gases }} ppm</p>
+                <p class="card-text">Data: {{ data.timestamp | date: 'dd/MM/yyyy HH:mm' }}</p>
               </div>
+            </div>
             }
           </div>
         </div>
         <div class="card-footer d-flex justify-content-center">
-        <nav aria-label="Navegação da página">
-          <ul class="pagination">
+          <nav aria-label="Navegação da página">
+            <ul class="pagination">
 
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <a class="page-link" href="javascript:void(0)" (click)="previousPage()">Anterior</a>
-            </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" href="javascript:void(0)" (click)="previousPage()">Anterior</a>
+              </li>
 
-            @for (page of [].constructor(totalPages); let i = $index; track i) {
+              @for (page of [].constructor(totalPages); let i = $index; track i) {
               <li class="page-item" [class.active]="currentPage === i + 1">
                 <a class="page-link" href="javascript:void(0)" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
               </li>
-            }
+              }
 
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <a class="page-link" href="javascript:void(0)" (click)="nextPage()">Próximo</a>
-            </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" href="javascript:void(0)" (click)="nextPage()">Próximo</a>
+              </li>
 
-          </ul>
-        </nav>
-      </div>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
+  @if(isLoading) {
+  <div class="loading-overlay">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  }
 </div>
